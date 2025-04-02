@@ -49,7 +49,7 @@ def import_files(
     force: Annotated[
         bool,
         typer.Option(
-            help="Skip hash comparison when replacing or checking for new files"
+            help=constants.FORCE_DESCRIPTION,
         ),
     ] = False,
 ):

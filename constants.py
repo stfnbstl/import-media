@@ -8,3 +8,4 @@ Options:\n
 """
 LOG_FORMAT = "%(message)s"
 BUFFER_SIZE = 65536  # 64KB
+FORCE_DESCRIPTION = "Skip hash comparison when replacing or checking for new files"
