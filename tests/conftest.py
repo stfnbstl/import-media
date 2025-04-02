@@ -1,13 +1,16 @@
+import logging
 import os
-import pytest
 import shutil
+import sys
 import tempfile
 from datetime import datetime
 from pathlib import Path
 from unittest.mock import MagicMock
 
-from PIL import Image, ExifTags
-import logging
+import pytest
+from PIL import ExifTags, Image
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
 @pytest.fixture
