@@ -1,0 +1,61 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+*.egg
+*.pth
+dist/
+build/
+develop-eggs/
+parts/
+eggs/
+lib/
+lib64/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.whl
+MANIFEST
+
+# PyInstaller
+#  Usually these files are written into a dist/ folder.
+#  On Windows, dist/ is often mistaken for a system installation folder.
+#  https://github.com/pyinstaller/pyinstaller/blob/develop/docs/spec-files/contents.rst
+*.manifest
+*.spec
+
+# Spyder project
+.spyderproject
+.spyproject
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# dotenv
+.env
+.venv
+
+# Poetry
+poetry.lock
+
+# OS generated files #
+.DS_Store
+Thumbs.db
