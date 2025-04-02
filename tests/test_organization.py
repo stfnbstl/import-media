@@ -56,7 +56,6 @@ def test_get_destination_folder_without_exif(
             expected_path = destination_dir / "2023" / month_name / "20"
             assert dest_folder == expected_path
             assert dest_folder.exists()
-            assert dest_folder.exists()
 
 
 def test_get_destination_folder_creation_error(
