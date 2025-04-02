@@ -98,3 +98,35 @@ destination/
 - rich==13.7.1
 - pillow==10.3.0
 - typer==0.12.3
+
+## Testing
+
+The application includes a comprehensive test suite using pytest. To run the tests:
+
+```bash
+# Install test dependencies
+pip install -r requirements.txt
+
+# Run all tests
+pytest
+
+# Run tests with verbose output
+pytest -v
+
+# Run a specific test module
+pytest tests/test_strategies.py
+
+# Run tests with coverage report
+pytest --cov=. tests/
+```
+
+### Testing Strategy
+- **Unit Tests**: Test individual components in isolation
+- **Integration Tests**: Test how components work together
+- **Mocking**: External dependencies and file system operations are mocked for reliable tests
+- **Fixtures**: Common test data and setup is handled through pytest fixtures
+
+To add coverage reporting, install pytest-cov:
+```bash
+pip install pytest-cov
+```
