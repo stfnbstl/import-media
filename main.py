@@ -68,7 +68,8 @@ def import_files(
     destination_path = Path(destination).absolute()
 
     if not validate_directories(source_path, destination_path, log):
-        sys.exit(1)
+        log.error("Directory validation failed. Exiting.")
+        return False  # Explicitly return False on validation failure
 
     log.info(
         f"Importing files with strategy {strategy.name} from {source_path} to {destination_path}"

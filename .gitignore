@@ -59,3 +59,20 @@ poetry.lock
 # OS generated files #
 .DS_Store
 Thumbs.db
+
+# Testing
+.pytest_cache/
+pytest.ini
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+TEST-*.xml
+nosetests.xml
+report.xml
+.tox/
+.nox/
+.mypy_cache/
+.ruff_cache/
+.pytype/
+.hypothesis/
