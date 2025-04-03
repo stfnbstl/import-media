@@ -48,8 +48,6 @@ def test_compare_hashes():
             return mock_open(read_data=file_content1.encode("utf-8"))(*args, **kwargs)
         elif filename == test_file2:
             return mock_open(read_data=file_content2.encode("utf-8"))(*args, **kwargs)
-        else:
-            raise FileNotFoundError(f"No such file: {filename}")
 
     # Mock the file open operation with our custom function
     with patch("utils.hashing.hashing.open", side_effect=mock_file):
@@ -71,8 +69,6 @@ def test_compare_hashes_different():
             return mock_open(read_data=file_content1.encode("utf-8"))(*args, **kwargs)
         elif filename == test_file2:
             return mock_open(read_data=file_content2.encode("utf-8"))(*args, **kwargs)
-        else:
-            raise FileNotFoundError(f"No such file: {filename}")
 
     # Mock the file open operation with our custom function
     with patch("utils.hashing.hashing.open", side_effect=mock_file):

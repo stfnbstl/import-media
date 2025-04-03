@@ -51,6 +51,28 @@ def test_handle_rename_strategy(
     assert renamed_file.exists()
 
 
+def test_handle_rename_strategy_renamed_file_exists(
+    destination_dir, mock_logger, sample_jpg_file
+):
+    """Test rename strategy when file exists."""
+    # First copy the file twice to destination to simulate already renamed existing file
+    existing_file = destination_dir / sample_jpg_file.name
+    existing_file_renamed = (
+        destination_dir / f"{sample_jpg_file.stem}_02{sample_jpg_file.suffix}"
+    )
+    copy_file(sample_jpg_file, existing_file, MagicMock())
+    copy_file(sample_jpg_file, existing_file_renamed, MagicMock())
+
+    # Now test the rename strategy
+    result = handle_rename_strategy(sample_jpg_file, destination_dir, mock_logger)
+
+    assert result is True
+    renamed_file = (
+        destination_dir / f"{sample_jpg_file.stem}_03{sample_jpg_file.suffix}"
+    )
+    assert renamed_file.exists()
+
+
 @pytest.mark.parametrize(
     "force,hashes_match,expected_result",
     [
@@ -83,6 +105,19 @@ def test_handle_replace_strategy(
         assert result is expected_result
 
 
+def test_handle_replace_strategy_exception(
+    destination_dir, sample_jpg_file, mock_logger
+):
+    dest_file = destination_dir / sample_jpg_file.name
+    copy_file(sample_jpg_file, dest_file, MagicMock())
+    with patch(
+        "import_strategies.handlers.HashingUtils.compare_hashes",
+        side_effect=Exception(),
+    ):
+        with pytest.raises(Exception):
+            handle_replace_strategy(sample_jpg_file, dest_file, False, mock_logger)
+
+
 @pytest.mark.parametrize(
     "force,hashes_match,expected_result",
     [
@@ -113,3 +148,16 @@ def test_handle_onlynew_strategy(
         result = handle_onlynew_strategy(sample_jpg_file, dest_file, force, mock_logger)
 
         assert result is expected_result
+
+
+def test_handle_onlynew_strategy_exception(
+    destination_dir, sample_jpg_file, mock_logger
+):
+    dest_file = destination_dir / sample_jpg_file.name
+    copy_file(sample_jpg_file, dest_file, MagicMock())
+    with patch(
+        "import_strategies.handlers.HashingUtils.compare_hashes",
+        side_effect=Exception(),
+    ):
+        with pytest.raises(Exception):
+            handle_onlynew_strategy(sample_jpg_file, dest_file, False, mock_logger)

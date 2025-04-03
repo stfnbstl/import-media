@@ -55,11 +55,14 @@ def sample_jpg_with_exif(source_dir):
     img_path = source_dir / "test_image_with_exif.jpg"
     img = Image.new("RGB", (100, 100), color="blue")
 
-    # Create minimal EXIF data with date
-    exif_data = {0x9003: "2023:01:15 12:30:45"}  # DateTimeOriginal tag (36867)
+    exif_data = {36867: "2023:01:15 12:30:45"}  # DateTimeOriginal tag (36867)
 
     # Save with EXIF data
-    img.save(img_path, exif=exif_data)
+    img.info["exif"] = Image.Exif()
+    for tag, value in exif_data.items():
+        img.info["exif"][tag] = value
+
+    img.save(img_path, exif=img.info["exif"])
 
     return img_path
 

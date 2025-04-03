@@ -52,7 +52,7 @@ def handle_replace_strategy(
                 return False
         except Exception as e:
             log.error(f"Error comparing files: {str(e)}")
-            return False
+            raise e
 
 
 def handle_onlynew_strategy(
@@ -85,7 +85,7 @@ def handle_onlynew_strategy(
                 return False
         except Exception as e:
             log.error(f"Error comparing files: {str(e)}")
-            return False
+            raise e
 
 
 def copy_file(file_path: Path, destination_file: Path, log: logging.Logger) -> bool:
