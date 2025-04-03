@@ -32,4 +32,6 @@ class LoggingUtils:
         basicConfig(
             format=FORMAT, level=loglevel, datefmt="[ %X ]", handlers=[RichHandler()]
         )
-        return getLogger(logger_name)
+        logger = getLogger(logger_name)
+        logger.setLevel(loglevel)
+        return logger

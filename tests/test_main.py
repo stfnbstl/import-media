@@ -1,11 +1,13 @@
-import pytest
-from pathlib import Path
-from unittest.mock import patch, MagicMock
-import typer
+import importlib
+import locale
 import sys
+from pathlib import Path
+from unittest.mock import patch
 
-from import_options.strategy import Strategy
+import pytest
+
 import main
+from import_options.strategy import Strategy
 
 
 @pytest.fixture
@@ -160,3 +162,32 @@ def test_import_files_with_destination_folder_none(
 
         # Check copy_file was not called
         mock_copy.assert_not_called()
+
+
+def test_locale_handling():
+    """Test locale handling with both success and failure cases."""
+    # Test when locale setting succeeds
+    with patch("locale.setlocale") as mock_setlocale, patch(
+        "builtins.print"
+    ) as mock_print:
+        # Reset module to test import behavior
+        if "main" in sys.modules:
+            del sys.modules["main"]
+
+        # Import should succeed and not print warning
+        importlib.import_module("main")
+        mock_setlocale.assert_called_once_with(locale.LC_TIME, "de_DE.UTF-8")
+        mock_print.assert_not_called()
+
+    # Test when locale setting fails
+    with patch("locale.setlocale", side_effect=locale.Error("Test error")), patch(
+        "builtins.print"
+    ) as mock_print:
+        # Reset module to test import behavior
+        if "main" in sys.modules:
+            del sys.modules["main"]
+
+        # Import should still succeed but print warning
+        importlib.import_module("main")
+        mock_print.assert_called_once()
+        assert "Warning: German locale not available" in mock_print.call_args[0][0]
