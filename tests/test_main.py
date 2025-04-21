@@ -8,6 +8,7 @@ import pytest
 
 import main
 from import_options.strategy import Strategy
+from utils.validation.file_types import FileType
 
 
 @pytest.fixture
@@ -80,7 +81,12 @@ def test_import_files_no_files_found(mock_find_jpg_files):
     ):
 
         result = main.import_files(
-            "/valid/source", "/valid/dest", Strategy.ONLYNEW, False, False
+            source="/valid/source",
+            destination="/valid/dest",
+            filetype=FileType.IMAGE,
+            strategy=Strategy.ONLYNEW,
+            force=False,
+            verbose=False,
         )
         assert result is None
 
@@ -109,7 +115,14 @@ def test_import_files_with_existing_file(
         "main.validate_directories", return_value=True
     ), patch("main.setup_logging"):
 
-        main.import_files("/valid/source", "/valid/dest", strategy, False, False)
+        main.import_files(
+            source="/valid/source",
+            destination="/valid/dest",
+            strategy=strategy,
+            filetype=FileType.IMAGE,
+            verbose=False,
+            force=False,
+        )
 
         # Check appropriate strategy handler was called
         if strategy == Strategy.RENAME:
@@ -136,7 +149,12 @@ def test_import_files_with_new_file(
     ), patch("main.setup_logging"):
 
         main.import_files(
-            "/valid/source", "/valid/dest", Strategy.ONLYNEW, False, False
+            source="/valid/source",
+            destination="/valid/dest",
+            strategy=Strategy.ONLYNEW,
+            filetype=FileType.IMAGE,
+            verbose=False,
+            force=False,
         )
 
         # Check copy_file was called
@@ -157,7 +175,12 @@ def test_import_files_with_destination_folder_none(
     ), patch("main.copy_file") as mock_copy:
 
         main.import_files(
-            "/valid/source", "/valid/dest", Strategy.ONLYNEW, False, False
+            source="/valid/source",
+            destination="/valid/dest",
+            strategy=Strategy.ONLYNEW,
+            filetype=FileType.IMAGE,
+            verbose=False,
+            force=False,
         )
 
         # Check copy_file was not called

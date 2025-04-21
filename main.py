@@ -1,6 +1,5 @@
 import locale
 import logging
-import sys
 from pathlib import Path
 
 import typer
@@ -17,7 +16,7 @@ from import_strategies import (
     handle_replace_strategy,
 )
 from utils import LoggingUtils
-from utils.validation import validate_directories
+from utils.validation import validate_directories, FileType
 
 # Try to set locale, but don't fail if it's not available
 try:
@@ -42,6 +41,9 @@ def setup_logging(verbose: bool) -> logging.Logger:
 def import_files(
     source: Annotated[str, typer.Option(help=constants.SOURCE_DESCRIPTION)],
     destination: Annotated[str, typer.Option(help=constants.DESTINATION_DESCRIPTION)],
+    filetype: Annotated[
+        FileType, typer.Option(help="File type to import")
+    ] = FileType.IMAGE,
     strategy: Annotated[
         Strategy, typer.Option(help=constants.STRATEGY_DESCRIPTION)
     ] = Strategy.ONLYNEW,
