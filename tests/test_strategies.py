@@ -8,6 +8,7 @@ from import_strategies.handlers import (
     handle_onlynew_strategy,
     copy_file,
 )
+from utils.validation.comparison_mode import ComparisonMode
 
 
 def test_copy_file_success(source_dir, destination_dir, mock_logger, sample_jpg_file):
@@ -74,17 +75,62 @@ def test_handle_rename_strategy_renamed_file_exists(
 
 
 @pytest.mark.parametrize(
-    "force,hashes_match,expected_result",
+    "force,hashes_match,expected_result, comparison_mode",
     [
-        (True, True, True),  # Force mode, hashes match
-        (True, False, True),  # Force mode, hashes don't match
-        (False, True, True),  # Normal mode, hashes match
-        (False, False, False),  # Normal mode, hashes don't match
+        (
+            True,
+            True,
+            True,
+            ComparisonMode.PARTIAL,
+        ),  # Force mode, hashes match, partial hashing
+        (
+            True,
+            False,
+            True,
+            ComparisonMode.PARTIAL,
+        ),  # Force mode, hashes don't match, partial hashing
+        (
+            False,
+            True,
+            True,
+            ComparisonMode.PARTIAL,
+        ),  # Normal mode, hashes match, partial hashing
+        (
+            False,
+            False,
+            False,
+            ComparisonMode.PARTIAL,
+        ),  # Normal mode, hashes don't match, partial hashing
+        (
+            True,
+            True,
+            True,
+            ComparisonMode.FULL,
+        ),  # Force mode, hashes match, full hashing
+        (
+            True,
+            False,
+            True,
+            ComparisonMode.FULL,
+        ),  # Force mode, hashes don't match, full hashing
+        (
+            False,
+            True,
+            True,
+            ComparisonMode.FULL,
+        ),  # Normal mode, hashes match, full hashing
+        (
+            False,
+            False,
+            False,
+            ComparisonMode.FULL,
+        ),  # Normal mode, hashes don't match, full hashing
     ],
 )
 def test_handle_replace_strategy(
     source_dir,
     destination_dir,
+    comparison_mode,
     mock_logger,
     sample_jpg_file,
     force,
@@ -100,7 +146,9 @@ def test_handle_replace_strategy(
         "import_strategies.handlers.HashingUtils.compare_hashes",
         return_value=hashes_match,
     ):
-        result = handle_replace_strategy(sample_jpg_file, dest_file, force, mock_logger)
+        result = handle_replace_strategy(
+            sample_jpg_file, dest_file, comparison_mode, force, mock_logger
+        )
 
         assert result is expected_result
 
@@ -119,17 +167,62 @@ def test_handle_replace_strategy_exception(
 
 
 @pytest.mark.parametrize(
-    "force,hashes_match,expected_result",
+    "force,hashes_match,expected_result,comparison_mode",
     [
-        (True, True, False),  # Force mode, hashes match
-        (True, False, False),  # Force mode, hashes don't match
-        (False, True, False),  # Normal mode, hashes match
-        (False, False, False),  # Normal mode, hashes don't match
+        (
+            True,
+            True,
+            False,
+            ComparisonMode.PARTIAL,
+        ),  # Force mode, hashes match, partial hashing
+        (
+            True,
+            False,
+            False,
+            ComparisonMode.PARTIAL,
+        ),  # Force mode, hashes don't match, partial hashing
+        (
+            False,
+            True,
+            False,
+            ComparisonMode.PARTIAL,
+        ),  # Normal mode, hashes match, partial hashing
+        (
+            False,
+            False,
+            False,
+            ComparisonMode.PARTIAL,
+        ),  # Normal mode, hashes don't match, partial hashing
+        (
+            True,
+            True,
+            False,
+            ComparisonMode.FULL,
+        ),  # Force mode, hashes match, full hashing
+        (
+            True,
+            False,
+            False,
+            ComparisonMode.FULL,
+        ),  # Force mode, hashes don't match, full hashing
+        (
+            False,
+            True,
+            False,
+            ComparisonMode.FULL,
+        ),  # Normal mode, hashes match, full hashing
+        (
+            False,
+            False,
+            False,
+            ComparisonMode.FULL,
+        ),  # Normal mode, hashes don't match, full hashing
     ],
 )
 def test_handle_onlynew_strategy(
     source_dir,
     destination_dir,
+    comparison_mode,
     mock_logger,
     sample_jpg_file,
     force,
@@ -145,7 +238,9 @@ def test_handle_onlynew_strategy(
         "import_strategies.handlers.HashingUtils.compare_hashes",
         return_value=hashes_match,
     ):
-        result = handle_onlynew_strategy(sample_jpg_file, dest_file, force, mock_logger)
+        result = handle_onlynew_strategy(
+            sample_jpg_file, dest_file, comparison_mode, force, mock_logger
+        )
 
         assert result is expected_result
 

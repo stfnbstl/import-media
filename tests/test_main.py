@@ -12,9 +12,9 @@ from utils.validation.file_types import FileType
 
 
 @pytest.fixture
-def mock_find_jpg_files():
+def mock_find_media_files():
     """Mock the find_jpg_files function."""
-    with patch("main.find_jpg_files") as mock:
+    with patch("main.find_media_files") as mock:
         yield mock
 
 
@@ -72,9 +72,9 @@ def test_import_files_validation_failure():
         )  # Should return False on validation failure instead of exiting
 
 
-def test_import_files_no_files_found(mock_find_jpg_files):
+def test_import_files_no_files_found(mock_find_media_files):
     """Test handling when no JPG files are found."""
-    mock_find_jpg_files.return_value = []
+    mock_find_media_files.return_value = []
 
     with patch("main.validate_directories", return_value=True), patch(
         "main.setup_logging"
@@ -96,7 +96,7 @@ def test_import_files_no_files_found(mock_find_jpg_files):
 )
 def test_import_files_with_existing_file(
     strategy,
-    mock_find_jpg_files,
+    mock_find_media_files,
     mock_get_destination_folder,
     mock_handle_strategies,
     temp_dir,
@@ -105,7 +105,7 @@ def test_import_files_with_existing_file(
     # Setup test data
     source_file = Path("/mock/source/file.jpg")
     dest_folder = temp_dir / "2023" / "May" / "15"
-    mock_find_jpg_files.return_value = [source_file]
+    mock_find_media_files.return_value = [source_file]
     mock_get_destination_folder.return_value = (dest_folder, None)
 
     mock_rename, mock_replace, mock_onlynew = mock_handle_strategies
@@ -134,13 +134,13 @@ def test_import_files_with_existing_file(
 
 
 def test_import_files_with_new_file(
-    mock_find_jpg_files, mock_get_destination_folder, mock_copy_file, temp_dir
+    mock_find_media_files, mock_get_destination_folder, mock_copy_file, temp_dir
 ):
     """Test importing a new file (not existing in destination)."""
     # Setup test data
     source_file = Path("/mock/source/file.jpg")
     dest_folder = temp_dir / "2023" / "May" / "15"
-    mock_find_jpg_files.return_value = [source_file]
+    mock_find_media_files.return_value = [source_file]
     mock_get_destination_folder.return_value = (dest_folder, None)
 
     # Make file appear to not exist
@@ -162,12 +162,12 @@ def test_import_files_with_new_file(
 
 
 def test_import_files_with_destination_folder_none(
-    mock_find_jpg_files, mock_get_destination_folder
+    mock_find_media_files, mock_get_destination_folder
 ):
     """Test handling when get_destination_folder returns None."""
     # Setup test data
     source_file = Path("/mock/source/file.jpg")
-    mock_find_jpg_files.return_value = [source_file]
+    mock_find_media_files.return_value = [source_file]
     mock_get_destination_folder.return_value = (None, None)
 
     with patch("main.validate_directories", return_value=True), patch(
