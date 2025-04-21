@@ -1,14 +1,14 @@
 import locale
 import logging
-import sys
 from pathlib import Path
 
 import typer
 from rich.progress import track
-from typing_extensions import Annotated
+from typing import Annotated
 
 import constants
-from file_handling import find_jpg_files, get_destination_folder
+from file_handling import find_media_files, get_destination_folder
+from file_handling.discovery import find_media_files
 from import_options.strategy import Strategy
 from import_strategies import (
     copy_file,
@@ -17,7 +17,8 @@ from import_strategies import (
     handle_replace_strategy,
 )
 from utils import LoggingUtils
-from utils.validation import validate_directories
+from utils.validation import validate_directories, FileType
+from utils.validation.comparison_mode import ComparisonMode
 
 # Try to set locale, but don't fail if it's not available
 try:
@@ -42,10 +43,16 @@ def setup_logging(verbose: bool) -> logging.Logger:
 def import_files(
     source: Annotated[str, typer.Option(help=constants.SOURCE_DESCRIPTION)],
     destination: Annotated[str, typer.Option(help=constants.DESTINATION_DESCRIPTION)],
+    filetype: Annotated[
+        FileType, typer.Option(help=constants.FILETYPE_DESCRIPTION)
+    ] = FileType.IMAGE,
     strategy: Annotated[
         Strategy, typer.Option(help=constants.STRATEGY_DESCRIPTION)
     ] = Strategy.ONLYNEW,
-    verbose: Annotated[bool, typer.Option(help="Enable verbose mode")] = False,
+    comparison_mode: Annotated[
+        ComparisonMode, typer.Option(help=constants.COMPARISON_MODE_DESCRIPTION)
+    ] = ComparisonMode.PARTIAL,
+    verbose: Annotated[bool, typer.Option(help=constants.VERBOSE_DESCRIPTION)] = False,
     force: Annotated[
         bool,
         typer.Option(
@@ -72,18 +79,22 @@ def import_files(
         return False  # Explicitly return False on validation failure
 
     log.info(
-        f"Importing files with strategy {strategy.name} from {source_path} to {destination_path}"
+        f"Importing {filetype.name} files with strategy {strategy.name} from {source_path} to {destination_path}"
     )
 
-    # Get all JPG files
-    src_files = find_jpg_files(source_path, log)
+    src_files = find_media_files(source_path=source_path, filetype=filetype, log=log)
 
     if not src_files:
         return
 
     # Process each file
     for file_path in track(src_files, description="Copying files"):
-        destination_folder, _ = get_destination_folder(file_path, destination_path, log)
+        destination_folder, _ = get_destination_folder(
+            file_path=file_path,
+            destination_path=destination_path,
+            filetype=filetype,
+            log=log,
+        )
 
         if destination_folder is None:
             continue
@@ -95,9 +106,13 @@ def import_files(
             if strategy == Strategy.RENAME:
                 handle_rename_strategy(file_path, destination_folder, log)
             elif strategy == Strategy.REPLACE:
-                handle_replace_strategy(file_path, destination_file, force, log)
+                handle_replace_strategy(
+                    file_path, destination_file, comparison_mode, force, log
+                )
             elif strategy == Strategy.ONLYNEW:
-                handle_onlynew_strategy(file_path, destination_file, force, log)
+                handle_onlynew_strategy(
+                    file_path, destination_file, comparison_mode, force, log
+                )
         else:
             copy_file(file_path, destination_file, log)
 

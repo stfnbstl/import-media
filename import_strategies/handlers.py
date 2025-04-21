@@ -4,6 +4,7 @@ from pathlib import Path
 
 import constants
 from utils import HashingUtils
+from utils.validation.comparison_mode import ComparisonMode
 
 
 def handle_rename_strategy(
@@ -23,7 +24,11 @@ def handle_rename_strategy(
 
 
 def handle_replace_strategy(
-    file_path: Path, destination_file: Path, force: bool, log: logging.Logger
+    file_path: Path,
+    destination_file: Path,
+    comparison_mode: ComparisonMode,
+    force: bool,
+    log: logging.Logger,
 ) -> bool:
     """Handle the replace strategy for a file."""
     if force:
@@ -37,6 +42,7 @@ def handle_replace_strategy(
                 file1=str(file_path),
                 file2=str(destination_file),
                 buffer_size=constants.BUFFER_SIZE,
+                comparison_mode=comparison_mode,
             )
 
             if compare_result:
@@ -56,7 +62,11 @@ def handle_replace_strategy(
 
 
 def handle_onlynew_strategy(
-    file_path: Path, destination_file: Path, force: bool, log: logging.Logger
+    file_path: Path,
+    destination_file: Path,
+    comparison_mode: ComparisonMode,
+    force: bool,
+    log: logging.Logger,
 ) -> bool:
     """Handle the onlynew strategy for a file."""
     if force:
@@ -70,6 +80,7 @@ def handle_onlynew_strategy(
                 file1=str(file_path),
                 file2=str(destination_file),
                 buffer_size=constants.BUFFER_SIZE,
+                comparison_mode=comparison_mode,
             )
 
             if compare_result:

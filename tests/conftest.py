@@ -45,8 +45,20 @@ def sample_jpg_file(source_dir):
 
     # Save without EXIF data first
     img.save(img_path)
+    # set the modification date to a specific date
+    mod_time = datetime(2023, 1, 15, 12, 30, 45).timestamp()
+    os.utime(str(img_path).encode("utf-8"), (mod_time, mod_time))
 
     return img_path
+
+
+@pytest.fixture
+def sample_mp4_file(source_dir):
+    """Create a sample MP4 file."""
+    mp4_path = source_dir / "test_video.mp4"
+    with open(mp4_path, "wb") as f:
+        f.write(b"\x00\x00\x00\x18ftypmp42")
+    return mp4_path
 
 
 @pytest.fixture
