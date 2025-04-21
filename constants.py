@@ -9,7 +9,7 @@ Options:\n
 FILETYPE_DESCRIPTION = """The type of file to import.\n
 Options:\n
 - [bold italic green]image[/bold italic green]: Import image files. (*.jpg)\n
-- [bold italic green]video[/bold italic green]: Import video files. (*.mp4, *.lrf)\n
+- [bold italic green]video[/bold italic green]: Import video files. (*.mp4, *.lrf, *.mov)\n
 """
 COMPARISON_MODE_DESCRIPTION = """The mode to use when comparing files.\n
 Options:\n
