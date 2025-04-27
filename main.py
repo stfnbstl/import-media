@@ -8,7 +8,6 @@ from typing import Annotated
 
 import constants
 from file_handling import find_media_files, get_destination_folder
-from file_handling.discovery import find_media_files
 from import_options.strategy import Strategy
 from import_strategies import (
     copy_file,

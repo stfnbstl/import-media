@@ -1,4 +1,3 @@
-import pytest
 from utils import ExifUtils
 from datetime import datetime
 

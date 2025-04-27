@@ -1,6 +1,5 @@
 import logging
 import os
-import shutil
 import sys
 import tempfile
 from datetime import datetime
@@ -8,7 +7,7 @@ from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
-from PIL import ExifTags, Image
+from PIL import Image
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
