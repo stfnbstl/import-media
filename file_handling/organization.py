@@ -66,6 +66,7 @@ def get_destination_folder(
     # Create the destination folder
     try:
         destination_folder.mkdir(parents=True, exist_ok=True)
+        logging.info(f"Created directory {destination_folder}")
     except Exception as e:
         log.error(f"Failed to create directory {destination_folder}: {str(e)}")
         return None, cur_file_date
