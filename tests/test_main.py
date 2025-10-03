@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
+from typer.testing import CliRunner
 import main
 from import_options.strategy import Strategy
 from utils.validation.file_types import FileType
@@ -36,9 +36,11 @@ def mock_copy_file():
 @pytest.fixture
 def mock_handle_strategies():
     """Mock all strategy handler functions."""
-    with patch("main.handle_rename_strategy") as mock_rename, patch(
-        "main.handle_replace_strategy"
-    ) as mock_replace, patch("main.handle_onlynew_strategy") as mock_onlynew:
+    with (
+        patch("main.handle_rename_strategy") as mock_rename,
+        patch("main.handle_replace_strategy") as mock_replace,
+        patch("main.handle_onlynew_strategy") as mock_onlynew,
+    ):
         mock_rename.return_value = True
         mock_replace.return_value = True
         mock_onlynew.return_value = True
@@ -61,8 +63,9 @@ def test_setup_logging_normal():
 
 def test_import_files_validation_failure():
     """Test handling of directory validation failure."""
-    with patch("main.validate_directories", return_value=False), patch(
-        "main.setup_logging"
+    with (
+        patch("main.validate_directories", return_value=False),
+        patch("main.setup_logging"),
     ):
         result = main.import_files(
             "invalid/source", "invalid/dest", Strategy.ONLYNEW, False, False
@@ -76,10 +79,10 @@ def test_import_files_no_files_found(mock_find_media_files):
     """Test handling when no JPG files are found."""
     mock_find_media_files.return_value = []
 
-    with patch("main.validate_directories", return_value=True), patch(
-        "main.setup_logging"
+    with (
+        patch("main.validate_directories", return_value=True),
+        patch("main.setup_logging"),
     ):
-
         result = main.import_files(
             source="/valid/source",
             destination="/valid/dest",
@@ -111,10 +114,11 @@ def test_import_files_with_existing_file(
     mock_rename, mock_replace, mock_onlynew = mock_handle_strategies
 
     # Create the folder and make file appear to exist
-    with patch("pathlib.Path.exists", return_value=True), patch(
-        "main.validate_directories", return_value=True
-    ), patch("main.setup_logging"):
-
+    with (
+        patch("pathlib.Path.exists", return_value=True),
+        patch("main.validate_directories", return_value=True),
+        patch("main.setup_logging"),
+    ):
         main.import_files(
             source="/valid/source",
             destination="/valid/dest",
@@ -144,10 +148,11 @@ def test_import_files_with_new_file(
     mock_get_destination_folder.return_value = (dest_folder, None)
 
     # Make file appear to not exist
-    with patch("pathlib.Path.exists", return_value=False), patch(
-        "main.validate_directories", return_value=True
-    ), patch("main.setup_logging"):
-
+    with (
+        patch("pathlib.Path.exists", return_value=False),
+        patch("main.validate_directories", return_value=True),
+        patch("main.setup_logging"),
+    ):
         main.import_files(
             source="/valid/source",
             destination="/valid/dest",
@@ -170,10 +175,11 @@ def test_import_files_with_destination_folder_none(
     mock_find_media_files.return_value = [source_file]
     mock_get_destination_folder.return_value = (None, None)
 
-    with patch("main.validate_directories", return_value=True), patch(
-        "main.setup_logging"
-    ), patch("main.copy_file") as mock_copy:
-
+    with (
+        patch("main.validate_directories", return_value=True),
+        patch("main.setup_logging"),
+        patch("main.copy_file") as mock_copy,
+    ):
         main.import_files(
             source="/valid/source",
             destination="/valid/dest",
@@ -190,9 +196,10 @@ def test_import_files_with_destination_folder_none(
 def test_locale_handling():
     """Test locale handling with both success and failure cases."""
     # Test when locale setting succeeds
-    with patch("locale.setlocale") as mock_setlocale, patch(
-        "builtins.print"
-    ) as mock_print:
+    with (
+        patch("locale.setlocale") as mock_setlocale,
+        patch("builtins.print") as mock_print,
+    ):
         # Reset module to test import behavior
         if "main" in sys.modules:
             del sys.modules["main"]
@@ -203,9 +210,10 @@ def test_locale_handling():
         mock_print.assert_not_called()
 
     # Test when locale setting fails
-    with patch("locale.setlocale", side_effect=locale.Error("Test error")), patch(
-        "builtins.print"
-    ) as mock_print:
+    with (
+        patch("locale.setlocale", side_effect=locale.Error("Test error")),
+        patch("builtins.print") as mock_print,
+    ):
         # Reset module to test import behavior
         if "main" in sys.modules:
             del sys.modules["main"]
@@ -214,3 +222,21 @@ def test_locale_handling():
         importlib.import_module("main")
         mock_print.assert_called_once()
         assert "Warning: German locale not available" in mock_print.call_args[0][0]
+
+
+def test_help_message():
+    """Test that the help message is displayed correctly."""
+    runner = CliRunner()
+    result = runner.invoke(main.app, ["--help"])
+    assert result.exit_code == 0
+    assert (
+        "Import JPG files from source directory to destination directory"
+        in result.output
+    )
+    assert "--source" in result.output
+    assert "--destination" in result.output
+    assert "--filetype" in result.output
+    assert "--strategy" in result.output
+    assert "--comparison-mode" in result.output
+    assert "--verbose" in result.output
+    assert "--force" in result.output
