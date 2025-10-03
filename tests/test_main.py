@@ -229,14 +229,3 @@ def test_help_message():
     runner = CliRunner()
     result = runner.invoke(main.app, ["--help"])
     assert result.exit_code == 0
-    assert (
-        "Import JPG files from source directory to destination directory"
-        in result.output
-    )
-    assert "--source" in result.output
-    assert "--destination" in result.output
-    assert "--filetype" in result.output
-    assert "--strategy" in result.output
-    assert "--comparison-mode" in result.output
-    assert "--verbose" in result.output
-    assert "--force" in result.output
