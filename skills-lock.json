@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "git-workflow": {
+      "source": "stfnbstl/awesome-ai",
+      "sourceType": "github",
+      "computedHash": "f82b8be6281f3003fb3674676787cd5a6de577ea4d843384c78abdca6ed02677"
+    }
+  }
+}
