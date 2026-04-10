@@ -1,10 +1,10 @@
 import locale
 import logging
 from pathlib import Path
+from typing import Annotated
 
 import typer
 from rich.progress import track
-from typing import Annotated
 
 import constants
 from file_handling import find_media_files, get_destination_folder
@@ -16,7 +16,7 @@ from import_strategies import (
     handle_replace_strategy,
 )
 from utils import LoggingUtils
-from utils.validation import validate_directories, FileType
+from utils.validation import FileType, validate_directories
 from utils.validation.comparison_mode import ComparisonMode
 
 # Try to set locale, but don't fail if it's not available

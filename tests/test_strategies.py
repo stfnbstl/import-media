@@ -1,11 +1,12 @@
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
 
 from import_strategies.handlers import (
+    copy_file,
+    handle_onlynew_strategy,
     handle_rename_strategy,
     handle_replace_strategy,
-    handle_onlynew_strategy,
-    copy_file,
 )
 from utils.validation.comparison_mode import ComparisonMode
 

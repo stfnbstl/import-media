@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 import pytest
 from typer.testing import CliRunner
+
 import main
 from import_options.strategy import Strategy
 from utils.validation.file_types import FileType

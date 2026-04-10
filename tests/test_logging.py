@@ -1,6 +1,8 @@
-import pytest
-from utils.logs.logging_utils import LoggingUtils
 import logging
+
+import pytest
+
+from utils.logs.logging_utils import LoggingUtils
 
 
 def test_get_base_logger():

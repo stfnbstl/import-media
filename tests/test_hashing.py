@@ -1,8 +1,9 @@
-from utils import HashingUtils
-import pytest
-from unittest.mock import mock_open, patch
 import os
+from unittest.mock import mock_open, patch
 
+import pytest
+
+from utils import HashingUtils
 from utils.validation.comparison_mode import ComparisonMode
 
 

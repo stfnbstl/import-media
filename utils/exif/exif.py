@@ -1,7 +1,8 @@
-from PIL import Image
+import logging
 from datetime import datetime
 from typing import Optional
-import logging
+
+from PIL import Image
 
 
 class ExifUtils:
