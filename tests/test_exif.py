@@ -1,5 +1,6 @@
-from utils import ExifUtils
 from datetime import datetime
+
+from utils import ExifUtils
 
 
 def test_get_date_taken(sample_jpg_with_exif):

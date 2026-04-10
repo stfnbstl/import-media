@@ -1,7 +1,8 @@
-import pytest
 import os
 from datetime import datetime
 from unittest.mock import patch
+
+import pytest
 
 from file_handling.organization import get_destination_folder
 from utils.validation.file_types import FileType

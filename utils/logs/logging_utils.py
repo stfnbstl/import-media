@@ -1,4 +1,5 @@
-from logging import basicConfig, Logger, getLogger
+from logging import Logger, basicConfig, getLogger
+
 from rich.logging import RichHandler
 
 
