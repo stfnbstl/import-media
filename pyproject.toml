@@ -9,7 +9,7 @@ description = "CLI tool for importing and organizing media files by date"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-  "pillow==12.1.1",
+  "pillow==12.2.0",
   "rich==13.7.1",
   "typer==0.19.2",
 ]
