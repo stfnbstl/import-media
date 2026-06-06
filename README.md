@@ -1,11 +1,11 @@
 # Media Import Tool
 
-A command-line utility for importing and organizing media files (currently JPG images and MP4/LRF/MOV videos) from a source directory to a destination directory, using EXIF or file modification date to create a structured year/month/day folder hierarchy.
+A command-line utility for importing and organizing media files (currently JPG/HEIF images and MP4/LRF/MOV videos) from a source directory to a destination directory, using EXIF or file modification date to create a structured year/month/day folder hierarchy.
 
 ## Features
 
 - **Automatic Date Organization**: Organizes media files into a Year/Month/Day folder structure based on EXIF data (for images) or file modification date (for videos or images without EXIF).
-- **Supports Specific File Types**: Imports JPG images and MP4, LRF, MOV video formats.
+- **Supports Specific File Types**: Imports JPG/HEIF images and MP4, LRF, MOV video formats.
 - **Multiple Import Strategies**:
   - **replace**: Replace files if they already exist in the destination.
   - **onlynew**: Only import files that do not already exist in the destination.
@@ -53,7 +53,7 @@ uv run python main.py --source /path/to/source/folder --destination /path/to/des
 |--------|-------------|
 | `--source` | Source directory containing media files |
 | `--destination` | Destination directory where files will be organized |
-| `--filetype` | Type of files to import: `image` (for JPG) or `video` (for MP4/LRF/MOV) |
+| `--filetype` | Type of files to import: `image` (for JPG/HIF/HEIF/HEIC) or `video` (for MP4/LRF/MOV) |
 | `--strategy` | Import strategy: `replace`, `onlynew` (default), or `rename` |
 | `--comparison-mode` | How to compare existing files: `full` (default) or `partial` |
 | `--verbose` | Enable detailed logging |
@@ -61,7 +61,7 @@ uv run python main.py --source /path/to/source/folder --destination /path/to/des
 
 ### Examples
 
-Import JPG images, only copying new ones (using default full hash comparison):
+Import JPG/HEIF images, only copying new ones (using default full hash comparison):
 
 ```bash
 uv run python main.py --source /Volumes/SD_CARD/DCIM/100MEDIA --destination ~/Pictures --filetype image
