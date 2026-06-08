@@ -11,8 +11,8 @@ def test_find_media_files_empty_dir(source_dir, mock_logger):
     mock_logger.warning.assert_called_once()
 
 
-def test_find_jpg_files(source_dir, mock_logger, sample_jpg_file):
-    """Test finding JPG files in a directory with one JPG file."""
+def test_find_image_files(source_dir, mock_logger, sample_jpg_file):
+    """Test finding image files in a directory with one JPG file."""
     files = find_media_files(
         source_path=source_dir, filetype=FileType.IMAGE, log=mock_logger
     )
@@ -29,9 +29,9 @@ def test_find_video_files(source_dir, mock_logger, sample_mp4_file):
     assert files[0] == sample_mp4_file
 
 
-def test_find_jpg_files_mixed_content(source_dir, mock_logger, sample_jpg_file):
-    """Test finding JPG files in a directory with mixed content."""
-    # Create some non-JPG files
+def test_find_image_files_mixed_content(source_dir, mock_logger, sample_jpg_file):
+    """Test finding image files in a directory with mixed content."""
+    # Create some non-image files
     (source_dir / "text_file.txt").write_text("This is a text file")
     (source_dir / "another_file.png").write_bytes(b"fake png data")
 
@@ -56,7 +56,7 @@ def test_find_video_files_mixed_content(source_dir, mock_logger, sample_mp4_file
 
 
 def test_find_media_files_ignores_hidden(source_dir, mock_logger):
-    """Test that find_jpg_files ignores hidden JPG files."""
+    """Test that find_media_files ignores hidden image files."""
     hidden_jpg = source_dir / "._hidden.JPG"
     hidden_jpg.write_bytes(b"fake jpg data")
 
@@ -67,21 +67,50 @@ def test_find_media_files_ignores_hidden(source_dir, mock_logger):
     mock_logger.warning.assert_called_once()
 
 
-def test_find_jpg_files_case_insensitive(source_dir, mock_logger):
-    """Test that find_jpg_files is case insensitive for JPG extension."""
+def test_find_image_files_case_insensitive(source_dir, mock_logger):
+    """Test that find_media_files is case insensitive for image extensions."""
     upper_jpg = source_dir / "UPPER.JPG"
     upper_jpg.write_bytes(b"fake jpg data")
 
     lower_jpg = source_dir / "lower.jpg"
     lower_jpg.write_bytes(b"fake jpg data")
 
+    upper_heif = source_dir / "UPPER.HEIF"
+    upper_heif.write_bytes(b"fake heif data")
+
+    lower_heic = source_dir / "lower.heic"
+    lower_heic.write_bytes(b"fake heic data")
+
     files = find_media_files(
         source_path=source_dir, filetype=FileType.IMAGE, log=mock_logger
     )
-    assert len(files) == 2
+    assert len(files) == 4
     file_names = [f.name for f in files]
     assert "UPPER.JPG" in file_names
     assert "lower.jpg" in file_names
+    assert "UPPER.HEIF" in file_names
+    assert "lower.heic" in file_names
+
+
+def test_find_image_files_includes_heif_formats(source_dir, mock_logger):
+    """Test finding supported HEIF-family image formats."""
+    hif_file = source_dir / "image.hif"
+    hif_file.write_bytes(b"fake hif data")
+
+    heif_file = source_dir / "image.heif"
+    heif_file.write_bytes(b"fake heif data")
+
+    heic_file = source_dir / "image.heic"
+    heic_file.write_bytes(b"fake heic data")
+
+    files = find_media_files(
+        source_path=source_dir, filetype=FileType.IMAGE, log=mock_logger
+    )
+    assert len(files) == 3
+    file_names = [f.name for f in files]
+    assert "image.hif" in file_names
+    assert "image.heif" in file_names
+    assert "image.heic" in file_names
 
 
 def test_find_video_files_case_insensitive(source_dir, mock_logger):

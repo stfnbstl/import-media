@@ -3,6 +3,9 @@ from datetime import datetime
 from typing import Optional
 
 from PIL import Image
+from pillow_heif import register_heif_opener
+
+register_heif_opener(thumbnails=False)
 
 
 class ExifUtils:
@@ -38,7 +41,7 @@ class ExifUtils:
         """
         try:
             with Image.open(path) as img:
-                exif_data = img._getexif()
+                exif_data = img.getexif()
                 if exif_data and ExifUtils.EXIF_DATETIME_ORIGINAL in exif_data:
                     return datetime.strptime(
                         exif_data[ExifUtils.EXIF_DATETIME_ORIGINAL],

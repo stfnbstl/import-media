@@ -14,7 +14,7 @@ def find_media_files(
                 f
                 for f in source_path.iterdir()
                 if f.is_file()
-                and f.suffix.upper() == ".JPG"
+                and f.suffix.upper() in [".JPG", ".HIF", ".HEIF", ".HEIC"]
                 and not f.name.startswith("._")
             ]
         case FileType.VIDEO:
@@ -27,6 +27,6 @@ def find_media_files(
             ]
 
     if not media_files:
-        log.warning(f"No JPG files found in {source_path}")
+        log.warning(f"No {filetype.value} files found in {source_path}")
 
     return media_files
